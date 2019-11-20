@@ -26,7 +26,8 @@ int main(int argc,char** argv)
 	data* a=new data;
 	a->name="zhang";
 	a->address="anhui-luan";
-	pool.add_task(print,a);
-	pool.run(pool.p_info);
+	for(int i=0;i<30;i++)
+		pool.add_task(print,a);
+	pool.run();
 	pthread_exit(NULL);
 }
