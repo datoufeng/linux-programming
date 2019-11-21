@@ -3,7 +3,7 @@ typedef struct sockaddr SA;
 void Perror(const char* str)
 {
 	perror(str);
-	exit(-1);
+	// exit(-1);
 }
 
 int Connect(int sockfd,const struct sockaddr* serveraddr,socklen_t addrlen)
@@ -15,10 +15,16 @@ int Connect(int sockfd,const struct sockaddr* serveraddr,socklen_t addrlen)
 	if(flag<0)
 	{
 		Perror("Connect err");
+		return-1;
 	}
 	return status;
 }
 
+int Connect(int sockfd,const struct sockaddr* server,socklen_t addrlen)
+{
+	int n=connect(sockfd,server,addrlen);
+	
+}
 int Accept(int sockfd,struct sockaddr* client_addr,socklen_t* addr_len)
 {
 	int status=0;
@@ -26,12 +32,13 @@ again:
 	status=accept(sockfd,client_addr,addr_len);
 	if(status<0)
 	{
-		if(errno==EINTR||errno==ECONNABORTED)
+		if(errno==EINTR||errno==ECONNABORTED||errno==EWOULDBLOCK)
 			goto again;
 		else
 		{
 			printf("epoll_accept\n");
 			Perror("Accept");
+			return -1;
 		}
 	}
 	return status;
@@ -40,8 +47,11 @@ again:
 int Bind(int sockfd,const struct sockaddr* my_addr,socklen_t addr_len)
 {
 	int status=bind(sockfd,my_addr,addr_len);
-	if(status<0)
+	if(status<0){
 		Perror("Bind");
+		return -1;
+	}
+		
 	return status;
 }
 
@@ -49,8 +59,11 @@ int Listen(int fd, int backlog)
 {
     int status=0;
 
-	if ((status = listen(fd, backlog)) < 0)
+	if ((status = listen(fd, backlog)) < 0){
 		Perror("listen");
+		return -1;
+	}
+		
     return status;
 }
 
