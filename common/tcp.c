@@ -6,12 +6,11 @@ void Perror(const char* str)
 	// exit(-1);
 }
 
+/*connect()	阻塞，仅在连接成功或者出错时返回   connect() 失败时，不能立刻重新连接*/
 int Connect(int sockfd,const struct sockaddr* serveraddr,socklen_t addrlen)
 {
-	int status=connect(sockfd,serveraddr,addrlen);		//connect()	阻塞，仅在连接成功或者出错时返回
-	int flag=fcntl(sockfd,F_GETFL,0);					//connect() 失败时，不能立刻重新连接
-	if((flag&O_NONBLOCK)!=O_NONBLOCK)
-		printf("sockfd block flag\n");
+	int status=connect(sockfd,serveraddr,addrlen);		
+
 	if(flag<0)
 	{
 		Perror("Connect err");
@@ -20,11 +19,7 @@ int Connect(int sockfd,const struct sockaddr* serveraddr,socklen_t addrlen)
 	return status;
 }
 
-int Connect(int sockfd,const struct sockaddr* server,socklen_t addrlen)
-{
-	int n=connect(sockfd,server,addrlen);
-	
-}
+
 int Accept(int sockfd,struct sockaddr* client_addr,socklen_t* addr_len)
 {
 	int status=0;

@@ -8,6 +8,7 @@
 
 int udp_echo(int sockfd/* ,struct sockaddr* client,socklen_t* cli_len */)
 {
+	int k=0;
 	struct sockaddr client;
 	while(1)
 	{
@@ -15,6 +16,11 @@ int udp_echo(int sockfd/* ,struct sockaddr* client,socklen_t* cli_len */)
 		char buf[1024]="";
 		int n=recvfrom(sockfd,(void*)buf,1024,0,(struct sockaddr*)&client,&cli_len);	/* 最后一个参数 值-结果参数，必须赋予值 */
 		printf("recvfrom:%s\n",buf);
+		if(k++>3)
+		{
+			sleep(10);
+		}
+		
 		sendto(sockfd,(void*)buf,n,0,(struct sockaddr*)&client,cli_len);
 		printf("sendto:%s\n",buf);
 		
